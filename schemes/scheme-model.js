@@ -10,7 +10,9 @@ function find () {
 }
 
 function findById (id) {
-    return db("schemes").where({id})
+    return db("schemes")
+    .where({id})
+    .then(result => result.length === 1 ? result : null)
 }
 
 function findSteps (id) {
@@ -27,12 +29,21 @@ function add (scheme) {
     .then(ids => ({ ...scheme, id: ids[0] }));
 }
 
+function addStep(step, scheme_id) {
+    return db("steps")
+    .insert({...step, scheme_id: scheme_id})
+}
+
 function update (changes, id) {
-    
+    return db("schemes")
+    .where({id})
+    .update(changes)
 }
 
 function remove (id) {
-    
+    return db("schemes")
+    .where({id})
+    .del()
 }
 
 // export for use in codebase
@@ -42,5 +53,6 @@ module.exports = {
     findSteps,
     add,
     update,
-    remove
+    remove,
+    addStep
 };
